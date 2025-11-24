@@ -21,7 +21,6 @@ class ProductTransaction extends Model
         'address',
         'quantity',
         'sub_total_amount',
-        'grand_total_amount',
         'is_paid',
         'product_id',
         'proof'

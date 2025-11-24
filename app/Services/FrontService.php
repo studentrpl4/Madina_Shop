@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
+use Psy\TabCompletion\Matcher\FunctionsMatcher;
+
+class FrontService
+{
+    protected $categoryRepository;
+    protected $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository,
+    CategoryRepositoryInterface $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+    }
+
+    public function searchProduct(string $keyword)
+    {
+        return $this->productRepository->searchByName($keyword);
+    }
+
+    public function getFrontPageData()
+    {
+        $categories = $this->categoryRepository->getAllCategories();
+        $popularProduct = $this->productRepository->getPopularProducts(4);
+        $newProduct = $this->productRepository->getAllNewProducts();
+
+        return compact('categories', 'popularProducts', 'newProducts');
+    }
+}

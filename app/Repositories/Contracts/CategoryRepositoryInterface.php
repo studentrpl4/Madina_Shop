@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Contacts;
+namespace App\Repositories\Contracts;
 
 Interface CategoryRepositoryInterface
 {

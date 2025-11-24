@@ -8,9 +8,9 @@ Route::get('/', [FrontController::class, 'index'])->name('front.index');
 
 Route::get('/browse/{category:slug}', [FrontController::class, 'category'])->name('front.category');
 
-Route::get('/details/{food:slug}', [FrontController::class, 'details'])->name('front.details');
+Route::get('/details/{product:slug}', [FrontController::class, 'details'])->name('front.details');
 
-Route::post('/order/begin/{food:slug}', [OrderController::class, 'saveOrder'])->name('front.save_order');
+Route::post('/order/begin/{product:slug}', [OrderController::class, 'saveOrder'])->name('front.save_order');
 
 Route::get('/order/booking/', [OrderController::class, 'booking'])->name('front.booking');
 

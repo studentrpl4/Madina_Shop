@@ -20,7 +20,7 @@ class Product extends Model
         'about',
         'price',
         'stock',
-        'is_populer',
+        'isPopular',
         'category_id',
         'product_id',
     ];
