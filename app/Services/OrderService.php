@@ -15,12 +15,28 @@ class OrderService
     protected $orderRepository;
     protected $productRepository;
 
+    public function __construct(CategoryRepositoryInterface $categoryRepository, OrderRepositoryInterface $orderRepository, ProductRepositoryInterface $productRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+        $this->orderRepository = $orderRepository;
+        $this->productRepository = $productRepository;
+    }
+
+    // {
+    //     throw new \Exception('Not implemented');
+    // }
+
     public function beginOrder(array $data)
     {
         $orderData = [
             'product_id' => $data['product_id'],
         ];
         $this->orderRepository->saveToSession($orderData);
+    }
+
+    public function getMyOrderDetails(array $validated)
+    {
+        return $this->orderRepository->findByTrxIdAndPhoneNumber($validated['booking_trx_id'], $validated['phone']);
     }
 
     public function getOrderDetails()
@@ -49,11 +65,12 @@ class OrderService
     public function paymentConfirm(array $validated)
     {
         $orderData = $this->orderRepository->getOrderDataFromSession();
-
+        
         $productTransactionId = null;
 
         try {
             DB::transaction(function() use ($validated, &$productTransactionId, $orderData){
+                
                 if(isset($validated['proof'])) {
                     $proofPath = $validated['proof']->store('proofs', 'public');
                     $validated['proof'] = $proofPath;
@@ -68,12 +85,14 @@ class OrderService
                 $validated['quantity'] = $orderData['quantity'];
                 $validated['sub_total_amount'] = $orderData['sub_total_amount'];
                 $validated['product_id'] = $orderData['product_id'];
-                $validated['is_paid'] = $orderData['is_paid'];
+                $validated['is_paid'] = false;
                 $validated['booking_trx_id'] = ProductTransaction::generateUniqueTrxId();
 
                 $newTransaction = $this->orderRepository->createTransaction($validated);
 
                 $productTransactionId = $newTransaction->id;
+
+                $this->orderRepository->clearSession();
             });
         } catch (\Exception $e) {
             Log::error('Error in payment confirmation: ' . $e->getMessage());

@@ -8,7 +8,7 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 // class ProductRepository implements ProductRepositoryInterface
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function getPopularproducts($limit = 4)
+    public function getPopularProducts($limit = 4)
     {
         return Product::where('is_popular', true)->take($limit)->get();
     }

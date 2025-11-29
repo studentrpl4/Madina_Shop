@@ -21,15 +21,10 @@ return new class extends Migration
             $table->string('city');
             $table->string('post_code');
             $table->string('proof');
-
             $table->text('address');
-
             $table->unsignedBigInteger('quantity'); 
             $table->unsignedBigInteger('sub_total_amount');
-            $table->unsignedBigInteger('grand_total_amount');
-
             $table->boolean('is_paid');
-
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
 

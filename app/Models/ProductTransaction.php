@@ -23,7 +23,7 @@ class ProductTransaction extends Model
         'sub_total_amount',
         'is_paid',
         'product_id',
-        'proof'
+        'proof',
     ];
 
     public static function generateUniqueTrxId()
@@ -31,7 +31,7 @@ class ProductTransaction extends Model
         $prefix = 'Mads';
         do {
             $randomString = $prefix . mt_rand(1000, 9999);
-        } while (self::where('booking_trx_id', $randomString)->exist());
+        } while (self::where('booking_trx_id', $randomString)->exists());
         return $randomString;
     }
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('about');
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('stock');
-            $table->boolean('isPopular');
+            $table->boolean('is_popular');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();

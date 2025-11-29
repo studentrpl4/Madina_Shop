@@ -23,11 +23,16 @@ class FrontService
         return $this->productRepository->searchByName($keyword);
     }
 
+    public function searchProducts(string $keyword)
+    {
+        return $this->productRepository->searchByName($keyword);
+    }
+
     public function getFrontPageData()
     {
         $categories = $this->categoryRepository->getAllCategories();
-        $popularProduct = $this->productRepository->getPopularProducts(4);
-        $newProduct = $this->productRepository->getAllNewProducts();
+        $popularProducts = $this->productRepository->getPopularProducts(4);
+        $newProducts = $this->productRepository->getAllNewProducts();
 
         return compact('categories', 'popularProducts', 'newProducts');
     }

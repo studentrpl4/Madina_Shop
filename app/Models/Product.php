@@ -20,9 +20,9 @@ class Product extends Model
         'about',
         'price',
         'stock',
-        'isPopular',
+        'is_popular',
         'category_id',
-        'product_id',
+        // 'product_id', di video itu brand_id
     ];
 
     public function setNameAttribute($value)
@@ -31,10 +31,10 @@ class Product extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class, 'prdouct_id');
-    }
+    // public function product(): BelongsTo
+    // {
+    //     return $this->belongsTo(Product::class, 'product_id');
+    // } di video public function brand()
 
     public function category(): BelongsTo
     {

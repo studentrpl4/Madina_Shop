@@ -64,7 +64,7 @@ class ProductResource extends Resource
                             Textarea::make('about')
                                 ->required(),
 
-                            Select::make('isPopular')
+                            Select::make('is_popular')
                                 ->options([
                                     true => 'Popular',
                                     false => 'Not Popular',
