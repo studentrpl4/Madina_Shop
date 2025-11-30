@@ -63,4 +63,8 @@ Route::middleware(['auth:customer'])->group(function () {
 
     });
 
+    Route::post('/logout', [CustomerAuthController::class, 'logout'])
+    ->name('customer.logout');
+
+
 });

@@ -11,6 +11,12 @@
         <div class="relative flex flex-col w-full max-w-[640px] min-h-screen gap-5 mx-auto bg-[#F5F5F0]">
             <div id="top-bar" class="flex justify-between items-center px-4 mt-[60px]">
                 <img src="{{asset('assets/images/logos/logo.svg')}}" class="flex shrink-0" alt="logo">
+                <form action="{{ route('customer.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" style="background:none;border:none;color:#007bff;cursor:pointer;">
+                        Logout
+                    </button>
+                </form>
                 <a href="#">
                     <img src="{{asset('assets/images/icons/notification.svg')}}" class="w-10 h-10" alt="icon">
                 </a>

@@ -40,7 +40,7 @@ class CustomerAuthController extends Controller
             }
 
             // jika sudah lengkap → arahkan ke dashboard
-            return redirect()->route('customer.dashboard');
+            return redirect()->route('front.index');
         }
 
         return back()->withErrors([
@@ -75,5 +75,16 @@ class CustomerAuthController extends Controller
 
     return redirect()->route('customer.setupProfile');
 }
+
+public function logout(Request $request)
+{
+    Auth::guard('customer')->logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('customer.auth.login');
+}
+
 
 }
