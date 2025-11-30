@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +28,39 @@ Route::get('/order/payment', [OrderController::class, 'payment'])->name('front.p
 Route::post('/order/payment/confirm', [OrderController::class, 'paymentConfirm'])->name('front.payment_confirm');
 
 Route::get('/order/finished/{productTransaction:id}', [OrderController::class, 'orderFinished'])->name('front.order_finished');
+
+Route::middleware('guest:customer')->group(function () {
+
+    // LOGIN
+    Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('customer.auth.login');
+    Route::post('/login', [CustomerAuthController::class, 'login']);
+
+    // REGISTER
+    Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('customer.auth.register');
+    Route::post('/register', [CustomerAuthController::class, 'register']);
+});
+
+Route::middleware(['auth:customer'])->group(function () {
+
+    // SETUP PROFILE (tidak memakai check.customer.profile)
+    Route::get('/setup-profile', [CustomerProfileController::class, 'showSetupProfile'])
+        ->name('customer.setupProfile');
+
+    Route::post('/setup-profile', [CustomerProfileController::class, 'storeSetupProfile']);
+
+    Route::get('/profile', [CustomerProfileController::class, 'showProfile'])
+    ->name('customer.profile');
+
+    Route::put('/profile', [CustomerProfileController::class, 'updateProfile']) 
+    ->name('customer.profile.update');
+
+
+    // ROUTE YANG BUTUH PROFIL LENGKAP
+    Route::middleware(['check.customer.profile'])->group(function () {
+
+        Route::get('/dashboard', function () {
+        })->name('customer.dashboard');
+
+    });
+
+});
