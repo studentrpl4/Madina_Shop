@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\FrontController;
-use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])->name('front.index');
@@ -14,20 +16,24 @@ Route::get('/browse/{category:slug}', [FrontController::class, 'category'])->nam
 
 Route::get('/details/{product:slug}', [FrontController::class, 'details'])->name('front.details');
 
-Route::get('/check-booking', [OrderController::class, 'checkBooking']) -> name('front.check_booking');
-Route::post('/check-booking/details', [OrderController::class, 'checkBookingDetails']) -> name('front.check_booking_details');
+// Route::get('/check-booking', [OrderController::class, 'checkBooking']) -> name('front.check_booking');
+// Route::post('/check-booking/details', [OrderController::class, 'checkBookingDetails']) -> name('front.check_booking_details');
 
-Route::post('/order/begin/{product:slug}', [OrderController::class, 'saveOrder'])->name('front.save_order');
+// Route::post('/order/begin/{product:slug}', [OrderController::class, 'saveOrder'])->name('front.save_order');
 
-Route::get('/order/booking/', [OrderController::class, 'booking'])->name('front.booking');
+// Route::get('/order/booking/', [OrderController::class, 'booking'])->name('front.booking');
 
-Route::get('/order/booking/customer-data', [OrderController::class, 'customerData'])->name('front.customer_data');
-Route::post('/order/booking/customer-data/save', [OrderController::class, 'saveCustomerData'])->name('front.save_customer_data');
+// Route::get('/order/booking/customer-data', [OrderController::class, 'customerData'])->name('front.customer_data');
+// Route::post('/order/booking/customer-data/save', [OrderController::class, 'saveCustomerData'])->name('front.save_customer_data');
 
-Route::get('/order/payment', [OrderController::class, 'payment'])->name('front.payment');
-Route::post('/order/payment/confirm', [OrderController::class, 'paymentConfirm'])->name('front.payment_confirm');
+// Route::get('/order/payment', [OrderController::class, 'payment'])->name('front.payment');
+// Route::post('/order/payment/confirm', [OrderController::class, 'paymentConfirm'])->name('front.payment_confirm');
 
-Route::get('/order/finished/{productTransaction:id}', [OrderController::class, 'orderFinished'])->name('front.order_finished');
+// Route::get('/order/finished/{productTransaction:id}', [OrderController::class, 'orderFinished'])->name('front.order_finished');
+
+
+
+
 
 Route::middleware('guest:customer')->group(function () {
 
@@ -65,6 +71,26 @@ Route::middleware(['auth:customer'])->group(function () {
 
     Route::post('/logout', [CustomerAuthController::class, 'logout'])
     ->name('customer.logout');
+
+    Route::post('/cart/add', [FrontController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart', [FrontController::class, 'cart'])->name('cart.index');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+
+    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('customer.orders');
+
+    // Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])
+    //     ->name('customer.orders.show');
+
+    // Route::get('/orders/{order}/track', [CustomerOrderController::class, 'track'])
+    //     ->name('customer.orders.track');
+
+    // Route::put('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
+
+    Route::post('/cart/{cart}/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+
+    Route::get('/orders/{order}', [CustomerOrderController::class, 'showDetail'])->name('orders.show');
 
 
 });

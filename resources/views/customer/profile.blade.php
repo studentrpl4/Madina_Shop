@@ -140,10 +140,10 @@
                                 <span class="font-bold text-sm leading-[21px]">Browse</span>
                             </div>
                         </a>
-                        <a href="{{route('front.check_booking')}}" class="mx-auto w-full">
+                        <a href="{{route('cart.index')}}" class="mx-auto w-full">
                             <img src="{{asset('assets/images/icons/bag-2-white.svg')}}" class="w-6 h-6" alt="icon">
                         </a>
-                        <a href="#" class="mx-auto w-full">
+                        <a href="{{route('customer.orders')}}" class="mx-auto w-full">
                             <img src="{{asset('assets/images/icons/star-white.svg')}}" class="w-6 h-6" alt="icon">
                         </a>
                         <a href="{{route('customer.profile')}}" class="mx-auto w-full">

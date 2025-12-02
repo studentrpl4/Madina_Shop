@@ -60,25 +60,69 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('front.save_order', $product->slug)}}" method="POST" class="flex flex-col gap-3">
+            <div class="flex flex-col gap-2">
+                        <p class="font-semibold">Quantity</p>
+                        <div class="relative flex items-center gap-[30px]">
+                            <button type="button" id='minus' class="flex w-full h-[54px] items-center justify-center rounded-full bg-[#2A2A2A] overflow-hidden">
+                                <span class="font-bold text-xl leading-[30px] text-white">-</span>
+                            </button>
+                            <p id="quantity-display" class="font-bold text-xl leading-[30px]">1</p>
+                            <button type="button" id="plus" class="flex w-full h-[54px] items-center justify-center rounded-full bg-[#C5F277] overflow-hidden">
+                                <span class="font-bold text-xl leading-[30px]">+</span>
+                            </button>
+                        </div>
+                    </div>
+            <form action="{{ route('cart.add') }}" method="POST" class="flex flex-col gap-3">
                 @csrf
                 <input type="hidden" name="product_id" value="{{$product->id}}">
+                <input type="hidden" name="quantity" id="quantity" value="1">
                 <div id="form-bottom-nav" class="relative flex h-[100px] w-full shrink-0 mt-5">
                     <div class="fixed bottom-5 w-full max-w-[640px] z-30 px-4">
                         <div class="flex items-center justify-between rounded-full bg-[#2A2A2A] p-[10px] pl-6">
                             <div class="flex flex-col gap-[2px]">
-                                <p class="font-bold text-[20px] leading-[30px] text-white">Rp {{number_format($product->price, 0, ',', '.')}}</p>
+                                <p class="font-bold text-[20px] leading-[30px] text-white">Rp <span id="subtotal" data-price="{{ $product->price }}">{{ number_format($product->price, 0, ',', '.') }}</span></p>
                             </div>
                             <button type="submit" class="rounded-full p-[12px_20px] bg-[#C5F277] font-bold">
-                                Buy Now
+                                Tambah Ke Keranjang
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
+        @if (session('success'))
+<div id="popup-cart"
+    class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-[#2A2A2A] text-white px-6 py-3 rounded-full shadow-lg animate-slide-up z-[999]">
+    {{ session('success') }}
+</div>
+
+<script>
+    setTimeout(() => {
+        const popup = document.getElementById('popup-cart');
+        if (popup) popup.style.display = 'none';
+    }, 2000);
+</script>
+
+<style>
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translate(-50%, 20px);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+    .animate-slide-up {
+        animation: slideUp 0.3s ease-out;
+    }
+</style>
+@endif
+
 
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="{{asset('js/details.js')}}"></script>
+        <script src="{{asset('js/booking.js')}}"></script>
     </body>
 </html>

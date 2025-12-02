@@ -36,10 +36,16 @@ class Product extends Model
     //     return $this->belongsTo(Product::class, 'product_id');
     // } di video public function brand()
 
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class, 'category_id');
-    }
+    // public function category(): BelongsTo
+    // {
+    //     return $this->belongsTo(Category::class, 'category_id');
+    // } sebelum di edit
+
+    public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
 
     public function photos(): HasMany
     {

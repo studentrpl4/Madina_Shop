@@ -1,9 +1,9 @@
-const defaultPrice = 18500000;
-const discount = 900000;
+// Ambil harga asli dari Blade (ditulis lewat atribut data)
+const defaultPrice = parseInt(document.getElementById('subtotal').dataset.price);
+
 const quantityDisplay = document.getElementById('quantity-display');
 const quantityInput = document.getElementById('quantity');
-// const totalPriceDisplay = document.getElementById('total-price');
-// const grandTotalDisplay = document.getElementById('grand-total');
+const subtotalEl = document.getElementById('subtotal');
 
 document.getElementById('minus').addEventListener('click', () => {
     let quantity = parseInt(quantityInput.value);
@@ -19,17 +19,19 @@ document.getElementById('plus').addEventListener('click', () => {
     updateDisplay(quantity);
 });
 
+function formatRupiah(number) {
+    return number.toLocaleString('id-ID');
+}
+
 function updateDisplay(quantity) {
     quantityInput.value = quantity;
     quantityDisplay.textContent = quantity;
-    const totalPrice = quantity * defaultPrice;
-    // totalPriceDisplay.textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
-    // const grandTotal = totalPrice - discount;
-    // grandTotalDisplay.textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+
+    const subtotal = quantity * defaultPrice;
+    subtotalEl.textContent = formatRupiah(subtotal);
 }
 
-// Initial display update when the page loads
+// Saat halaman pertama kali load
 document.addEventListener('DOMContentLoaded', () => {
-    const initialQuantity = parseInt(quantityInput.value);
-    updateDisplay(initialQuantity);
+    updateDisplay(parseInt(quantityInput.value));
 });
