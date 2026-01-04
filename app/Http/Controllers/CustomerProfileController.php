@@ -20,6 +20,14 @@ class CustomerProfileController extends Controller
         return view('customer.setup-profile');
     }
 
+    public function showdatailProfile()
+    {
+        // jika profil sudah lengkap, langsung ke dashboard
+        $customer = Auth::guard('customer')->user();
+
+        return view('customer.detailprofile',compact('customer'));
+    }
+
     // ========================
     // STORE PROFILE DATA
     // ========================
@@ -47,30 +55,30 @@ class CustomerProfileController extends Controller
     }
 
     public function showProfile()
-{
-    $customer = Auth::guard('customer')->user();
+    {
+        $customer = Auth::guard('customer')->user();
 
-    return view('customer.profile', compact('customer'));
-}
+        return view('customer.profile', compact('customer'));
+    }
 
-public function updateProfile(Request $request)
-{
-    $request->validate([
-        'name' => 'required',
-        'phone' => 'required',
-        'gender' => 'required',
-        'birth_date' => 'required|date',
-    ]);
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'gender' => 'required',
+            'birth_date' => 'required|date',
+        ]);
 
-    $customer = Auth::guard('customer')->user();
+        $customer = Auth::guard('customer')->user();
 
-    $customer->update([
-        'name' => $request->name,
-        'phone' => $request->phone,
-        'gender' => $request->gender,
-        'birth_date' => $request->birth_date,
-    ]);
+        $customer->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+        ]);
 
-    return redirect()->route('customer.profile')->with('success', 'Profil berhasil diperbarui!');
-}
+        return redirect()->route('customer.profile')->with('success', 'Profil berhasil diperbarui!');
+    }
 }

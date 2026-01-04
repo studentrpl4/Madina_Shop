@@ -6,15 +6,26 @@ use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\FrontController;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])->name('front.index');
+Route::get('/test', function () {
+    return view('welcome');
+})->name('test');
+
+
 
 Route::get('/search', [FrontController::class, 'search'])->name('front.search');
 
 Route::get('/browse/{category:slug}', [FrontController::class, 'category'])->name('front.category');
 
 Route::get('/details/{product:slug}', [FrontController::class, 'details'])->name('front.details');
+Route::get('/produk', [FrontController::class, 'produk'])->name('produk');
+Route::get('/category', [FrontController::class, 'allcategory'])->name('category');
+
+Route::post('/midtrans/callback', [CheckoutController::class, 'handleMidtransCallback'])->withoutMiddleware([VerifyCsrfToken::class]);
+
 
 // Route::get('/check-booking', [OrderController::class, 'checkBooking']) -> name('front.check_booking');
 // Route::post('/check-booking/details', [OrderController::class, 'checkBookingDetails']) -> name('front.check_booking_details');
@@ -52,33 +63,36 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::get('/setup-profile', [CustomerProfileController::class, 'showSetupProfile'])
         ->name('customer.setupProfile');
 
+    Route::get('/datail-profile', [CustomerProfileController::class, 'showdatailProfile'])
+        ->name('customer.detail.profile');
+
     Route::post('/setup-profile', [CustomerProfileController::class, 'storeSetupProfile']);
 
     Route::get('/profile', [CustomerProfileController::class, 'showProfile'])
-    ->name('customer.profile');
+        ->name('customer.profile');
 
-    Route::put('/profile', [CustomerProfileController::class, 'updateProfile']) 
-    ->name('customer.profile.update');
+    Route::put('/profile', [CustomerProfileController::class, 'updateProfile'])
+        ->name('customer.profile.update');
 
 
     // ROUTE YANG BUTUH PROFIL LENGKAP
     Route::middleware(['check.customer.profile'])->group(function () {
 
-        Route::get('/dashboard', function () {
-        })->name('customer.dashboard');
-
+        Route::get('/dashboard', function () {})->name('customer.dashboard');
     });
 
     Route::post('/logout', [CustomerAuthController::class, 'logout'])
-    ->name('customer.logout');
+        ->name('customer.logout');
 
     Route::post('/cart/add', [FrontController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart', [FrontController::class, 'cart'])->name('cart.index');
+    Route::get('/cart', [FrontController::class, 'cart'])->name('cart.index')->middleware('auth');
 
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
-    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('customer.orders');
+    Route::get('/order.success', [FrontController::class, 'order_success'])->name('order.success');
+    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('customer.orders')->middleware('auth');
+
 
     // Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])
     //     ->name('customer.orders.show');
@@ -91,6 +105,4 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::post('/cart/{cart}/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
 
     Route::get('/orders/{order}', [CustomerOrderController::class, 'showDetail'])->name('orders.show');
-
-
 });

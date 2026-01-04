@@ -1,166 +1,139 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="{{asset('output.css')}}" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-    </head>
-    <body>
-        <div class="relative flex flex-col w-full max-w-[640px] min-h-screen gap-5 mx-auto bg-[#F5F5F0]">
-            <div id="top-bar" class="flex justify-between items-center px-4 mt-[60px]">
-                <img src="{{asset('assets/images/logos/logo.svg')}}" class="flex shrink-0" alt="logo">
-                <form action="{{ route('customer.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" style="background:none;border:none;color:#007bff;cursor:pointer;">
-                        Logout
-                    </button>
-                </form>
-                <a href="#">
-                    <img src="{{asset('assets/images/icons/notification.svg')}}" class="w-10 h-10" alt="icon">
-                </a>
+@extends('layout.app')
+
+@section('title', 'Madinashop')
+
+@section('content')
+    <div class="min-h-screen bg-[#F4F5F1] px-4 pb-24">
+
+        {{-- HEADER --}}
+        <header class="pt-6 mb-4">
+            <div class="flex items-center justify-between">
+                <h1 class="font-semibold text-lg flex items-center gap-2">
+                    <svg class="w-6 h-6 text-[#0AA085]" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                    Madinashop
+                </h1>
+
+                <div class="flex items-center gap-3">
+                    @if(Auth::guard('customer')->check())
+                        <a href="{{ route('cart.index') }}" class="p-2 bg-white rounded-full shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
+                                <circle cx="8" cy="21" r="1" />
+                                <circle cx="19" cy="21" r="1" />
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                            </svg>
+                        </a>
+
+                        <a href="#" class="p-2 bg-white rounded-full shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-bell-icon lucide-bell">
+                                <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+                                <path
+                                    d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+                            </svg>
+                        </a>
+                    @else
+                        <a href="{{ route('customer.auth.login') }}"
+                            class="p-2 px-5 rounded-full font-bold border bg-[#0AA085] text-white border-[#0AA085]">
+                            login
+                        </a>
+                    @endif
+
+                </div>
             </div>
-            <form action="{{route('front.search')}}" class="flex justify-between items-center mx-4">
-                <div class="relative flex items-center w-full rounded-l-full px-[14px] gap-[10px] bg-white transition-all duration-300 focus-within:ring-2 focus-within:ring-[#FFC700]">
-                    <img src="{{asset('assets/images/icons/search-normal.svg')}}" class="w-6 h-6" alt="icon">
-                    <input type="text" name="keyword" class="w-full py-[14px] appearance-none bg-white outline-none font-semibold placeholder:font-normal placeholder:text-[#878785]" placeholder="Cari Produk...">
+        </header>
+
+        {{-- Pencarian --}}
+        <form action="{{route('front.search')}}" class="flex justify-between items-center mx-4">
+            <div class="flex items-center mb-6 w-full max-w-md">
+                <div class="flex-grow bg-white rounded-l-full px-4 py-3 shadow-sm flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5a6 6 0 100 12 6 6 0 000-12zM21 21l-4.35-4.35" />
+                    </svg>
+                    <input type="text" name="keyword" placeholder="Cari produk favoritmu..."
+                        class="w-full bg-transparent outline-none text-gray-700">
                 </div>
-                <button type="submit" class="h-full rounded-r-full py-[14px] px-5 bg-[#C5F277]">
-                    <span class="font-semibold">Cari</span>
+
+                <button class="ml-0 bg-[#0AA085] text-white px-5 py-3 rounded-r-full font-medium">
+                    Cari
                 </button>
-            </form>
-            <section id="category" class="flex flex-col gap-4 px-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-bold leading-[20px]"><br>Kategori</h2>
-                    <a href="category.html" class="rounded-full p-[6px_14px] border border-[#2A2A2A] text-xs leading-[18px]">
-                        Lihat Semua
-                    </a>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
+            </div>
+        </form>
+        {{-- KATEGORI --}}
 
-                    @forelse ($categories as $itemCategory)
-                        <a href="{{route('front.category', $itemCategory->slug)}}">
-                            <div class="flex items-center justify-between w-full rounded-2xl overflow-hidden bg-white transition-all duration-300 hover:ring-2 hover:ring-[#FFC700]">
-                                <div class="flex flex-col gap-[2px] px-[14px]">
-                                    <h3 class="font-bold text-sm leading-[21px]">{{$itemCategory->name}}</h3>
-                                    <p class="text-xs leading-[18px] text-[#878785]">{{$itemCategory->products->count()}} Produk</p>
-                                </div>
-                                <div class="flex shrink-0 w-20 h-[90px] overflow-hidden">
-                                    <img src="{{Storage::url($itemCategory->icon)}}" class="w-full h-full object-cover object-left" alt="thumbnail">
-                                </div>
-                            </div>
-                        </a>
-                    @empty
-                        <p>Belum Ada Data Terbaru...</p>
-                    @endforelse
-                    
-                </div>
-            </section>
-            <section id="featured" class="flex flex-col gap-4">
-                <div class="flex items-center justify-between px-4">
-                    <h2 class="font-bold leading-[20px]"><br>Rekomendasi</h2>
-                    <a href="#" class="rounded-full p-[6px_14px] border border-[#2A2A2A] text-xs leading-[18px]">
-                        Lihat Semua
-                    </a>
-                </div>
-                <div class="swiper w-full overflow-hidden">
-                    <div class="swiper-wrapper">
-
-                        @forelse ($popularProducts as $itemPopularProduct)
-                            <div class="swiper-slide !w-fit py-[2px]">
-                            <a href="{{route('front.details', $itemPopularProduct->slug)}}">
-                                <div class="flex flex-col shrink-0 w-[230px] h-full rounded-3xl gap-[14px] p-[10px] pb-4 bg-white transition-all duration-300 hover:ring-2 hover:ring-[#FFC700]">
-                                    <div class="w-[210px] h-[230px] rounded-3xl bg-[#D9D9D9] overflow-hidden">
-                                        <img src="{{Storage::url($itemPopularProduct->thumbnail)}}" class="w-full h-full object-cover" alt="thumbnail">
-                                    </div>
-                                    <div class="flex flex-col gap-[14px] justify-between">
-                                        <div class="flex items-center justify-between gap-4">
-                                            <h3 class="font-bold leading-[20px]">{{$itemPopularProduct->name}}</h3>
-                                            <p class="font-bold text-sm leading-[21px] text-nowrap">Rp {{number_format($itemPopularProduct->price, 0, ',', '.')}}</p>
-                                        </div>
-                                        <div class="flex items-center justify-between gap-2">
-                                            <div class="flex items-center gap-1">
-                                                <img src="{{asset('assets/images/icons/Star 1.svg')}}" class="w-[22px] h-[22px]" alt="star">
-                                                <p class="font-semibold text-sm leading-[21px]">4.5</p>
-                                            </div>
-                                            <p class="text-sm leading-[21px] text-[#878785]">(18,485 reviews)</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        @empty
-                            <p>Belum Ada Data Terbaru</p>
-                        @endforelse
-                        
-                    </div>
-                </div>
-            </section>
-            <section id="fresh" class="flex flex-col gap-4 px-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-bold leading-[20px]"><br>Produk Terbaru</h2>
-                    <a href="#" class="rounded-full p-[6px_14px] border border-[#2A2A2A] text-xs leading-[18px]">
-                        Lihat Semua
-                    </a>
-                </div>
-                <div class="flex flex-col gap-4">
-
-                    @forelse ($newProducts as $itemNewProduct)
-                        <a href="{{route('front.details', $itemNewProduct->slug)}}">
-                        <div class="flex items-center rounded-3xl p-[10px_16px_16px_10px] gap-[14px] bg-white transition-all duration-300 hover:ring-2 hover:ring-[#FFC700]">
-                            <div class="w-20 h-20 flex shrink-0 rounded-2xl bg-[#D9D9D9] overflow-hidden">
-                                <img src="{{Storage::url($itemNewProduct->thumbnail)}}" class="w-full h-full object-cover" alt="thumbnail">
-                            </div>
-                            <div class="flex w-full items-center justify-between gap-[14px]">
-                                <div class="flex flex-col gap-[6px]">
-                                    <h3 class="font-bold leading-[20px]">{{$itemNewProduct->name}}</h3>
-                                    <p class="text-sm leading-[21px] text-[#878785]">{{$itemNewProduct->category->name}}</p>
-                                </div>
-                                <div class="flex flex-col gap-1 items-end shrink-0">
-                                    <div class="flex">
-                                        <img src="{{asset('assets/images/icons/Star 1.svg')}}" class="w-[18px] h-[18px] flex shrink-0" alt="star">
-                                        <img src="{{asset('assets/images/icons/Star 1.svg')}}" class="w-[18px] h-[18px] flex shrink-0" alt="star">
-                                        <img src="{{asset('assets/images/icons/Star 1.svg')}}" class="w-[18px] h-[18px] flex shrink-0" alt="star">
-                                        <img src="{{asset('assets/images/icons/Star 1.svg')}}" class="w-[18px] h-[18px] flex shrink-0" alt="star">
-                                        <img src="{{asset('assets/images/icons/Star 1.svg')}}" class="w-[18px] h-[18px] flex shrink-0" alt="star">
-                                    </div>
-                                    <p class="font-semibold text-sm leading-[21px]">4.5</p>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    @empty
-                        
-                    @endforelse
-                    
-                    
-                </div>
-            </section>
-            <div id="bottom-nav" class="relative flex h-[100px] w-full shrink-0">
-                <nav class="fixed bottom-5 w-full max-w-[640px] px-4 z-30">
-                    <div class="grid grid-flow-col auto-cols-auto items-center justify-between rounded-full bg-[#2A2A2A] p-2 px-[30px]">
-                        <a href="{{route('front.index')}}" class="active flex shrink-0 -mx-[22px]">
-                            <div class="flex items-center rounded-full gap-[10px] p-[12px_16px] bg-[#C5F277]">
-                                <img src="{{asset('assets/images/icons/3dcube.svg')}}" class="w-6 h-6" alt="icon">
-                                <span class="font-bold text-sm leading-[21px]">Browse</span>
-                            </div>
-                        </a>
-                        <a href="{{route('cart.index')}}" class="mx-auto w-full">
-                            <img src="{{asset('assets/images/icons/bag-2-white.svg')}}" class="w-6 h-6" alt="icon">
-                        </a>
-                        <a href="{{route('customer.orders')}}" class="mx-auto w-full">
-                            <img src="{{asset('assets/images/icons/star-white.svg')}}" class="w-6 h-6" alt="icon">
-                        </a>
-                        <a href="{{route('customer.profile')}}" class="mx-auto w-full">
-                            <img src="{{asset('assets/images/icons/24-support-white.svg')}}" class="w-6 h-6" alt="icon">
-                        </a>
-                    </div>
-                </nav>
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="font-semibold text-gray-800">Kategori Produk</h2>
+            <div class="bg-white rounded-full p-1 px-3">
+                <a class="text-[#0AA085] font-medium text-sm" href="{{ route('category') }}">Lihat Semua</a>
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-        <script src="{{asset('js/index.js')}}"></script>
-    </body>
-</html>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            {{-- Item kategori --}}
+            @if (!empty($categories))
+                @foreach ($categories as $item)
+                    <a href="{{route('front.category', $item->slug)}}">
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-3">
+                            {{-- <div class=""> --}}
+                                @if ($item->icon && file_exists(public_path('storage/' . $item->icon)))
+                                    <img src="{{ asset('storage/' . $item->icon) }}"
+                                        class="w-6 h-6 object-cover object-left text-primary-green" alt="thumbnail">
+                                @else
+                                    <svg class="w-6 h-6 text-primary-green" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                @endif
+
+                                {{--
+                            </div> --}}
+                            <span class="text-sm font-medium text-gray-700">{{ $item->name }}</span>
+                        </div>
+                    </a>
+                @endforeach
+            @else
+                <p>Belum Ada Data Terbaru...</p>
+            @endif
+
+        </div>
+
+        {{-- PRODUK TERLARIS --}}
+        <h2 class="font-semibold text-gray-800 mb-3">Produk Terlaris</h2>
+
+        <div class="grid grid-cols-2 gap-4">
+            {{-- CARD PRODUK --}}
+            @foreach ($newProducts as $item)
+                <a href="{{route('front.details', $item->slug)}}">
+                    <form action="{{ route('cart.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{$item->id}}">
+                        <input type="hidden" name="quantity" id="quantity" value="1">
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <img src="{{ asset('storage/' . $item->thumbnail) }}" class="w-full rounded-lg mb-3" alt="">
+                            <h3 class="text-sm text-gray-700">{{ $item->name }} <br> {{ $item->about }} </h3>
+                            <p class="text-[#0AA085] font-semibold text-sm mt-1">Rp.
+                                {{ number_format($item->price, 0, '.', '.') }}
+                            </p>
+                            <button type="submit"
+                                class="mt-3 w-full bg-[#0AA085] text-white py-2 rounded-full text-sm font-medium">
+                                + Keranjang
+                            </button>
+                        </div>
+                    </form>
+                </a>
+            @endforeach
+        </div>
+
+    </div>
+
+    {{-- BOTTOM NAV --}}
+    @include('navbar.navbar')
+
+@endsection
